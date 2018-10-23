@@ -127,27 +127,20 @@ namespace afm
 
             auto iter = dataSource.find(name);
 
-            if (iter != dataSource.end())
-            {
+            if (iter != dataSource.end()) {
                 value = iter.value();
 
                 success = true;
-            }
-            else
-            {
-                for (auto& data : dataSource)
-                {
+            } else {
+                for (auto& data : dataSource) {
                     // we have checked the top level, look deeper to find
                     // any sub values i.e. look inside of various arrays
                     // this will break on the first match...
-                    if (data.is_array() == true)
-                    {
-                        for (auto &item : data)
-                        {
+                    if (data.is_array() == true) {
+                        for (auto &item : data) {
                             // check each item in the array
                             success = GetValue(name, value, item);
-                            if (success == true)
-                            {
+                            if (success == true) {
                                 break;
                             }
                         }
