@@ -39,8 +39,7 @@ namespace afm
          * 
          * See also: https://iotbreaks.com/understand-bluetooth-hci-commands-and-events/
          */
-        enum HCI_PacketType : uint8_t
-        {
+        enum HCI_PacketType : uint8_t {
             HCI_CommandPacket = 0x01,
             HCI_ACLPacket,
             HCI_SCOPacket,
@@ -48,27 +47,25 @@ namespace afm
             END_HCI_PACKET_TYPES
         };
 
-		/**
-		 * The structure of an HCI command being sent over
-		 * a socket
-		 */
-		struct __attribute__((packed)) HCI_Command
-		{
-			uint16_t    commandCode;
-			uint8_t     parameterLength;
-			void        *pParameters;
-		};
+        /**
+         * The structure of an HCI command being sent over
+         * a socket
+         */
+        struct __attribute__((packed)) HCI_Command {
+            uint16_t        commandCode;
+            uint8_t        parameterLength;
+            void        *pParameters;
+        };
 
         // define sie so we don't include the parameter pointer
         static const uint8_t HCI_CommandSize = 3; // doesnt' include void *
 
-        enum HCI_CommandFields
-		{
-			HCI_PacketTypeField,
-			HCI_CommandStructure,
+        enum HCI_CommandFields {
+            HCI_PacketTypeField,
+            HCI_CommandStructure,
             HCI_ParameterFields,
-			NUM_HCI_CommandFields
-		};
+            NUM_HCI_CommandFields
+        };
 
 
         static const int32_t SocketLevelHCI = 0;
@@ -81,8 +78,7 @@ namespace afm
             END_HCI_SOCKET_OPTIONS
         };
 
-        enum Bluetooth_ProtocolLayer
-        {
+        enum Bluetooth_ProtocolLayer {
             BT_L2CAP = 0,
             BT_HCI,
             BT_SCO,
@@ -94,15 +90,14 @@ namespace afm
             END_BLUETOOTH_PROTOCOL_LAYERS
         };
 
-		/**
-		 * The HCI socket address format
-		 */
-		struct HCI_SockAddr
-		{
-			sa_family_t hci_family;
-			uint16_t 	hci_device;
-			uint16_t 	hci_channel;
-		};
+        /**
+         * The HCI socket address format
+         */
+        struct HCI_SockAddr {
+            sa_family_t hci_family;
+            uint16_t 	hci_device;
+            uint16_t 	hci_channel;
+        };
 
         /**
          * @brief Event Types
@@ -218,43 +213,39 @@ namespace afm
             END_LE_META_SUB_EVENT_CODE
         };
 
-		struct __attribute__((packed)) HCI_Event
-		{
-			uint8_t eventCode;
-			uint8_t parameterLength;
-			void 	*pParams;
-		};
+        struct __attribute__((packed)) HCI_Event {
+            uint8_t eventCode;
+            uint8_t parameterLength;
+            void 	*pParams;
+        };
 
         // define size so we don't include the void *
         static const uint8_t HCI_EventSize = 2; // without params void *
 
-		struct __attribute__((packed)) HCI_FilterParams
-		{
-			uint32_t packetTypeMask;
-			uint32_t eventMask[2];
-			uint16_t controllerCommand;
-		};
+        struct __attribute__((packed)) HCI_FilterParams {
+            uint32_t packetTypeMask;
+            uint32_t eventMask[2];
+            uint16_t controllerCommand;
+        };
 
-		/**
-		 * The structure for setting LE scan parameters over the HCI socket
-		 */
-		struct __attribute__((packed)) LE_ScanParams
-		{
-			uint8_t		type;
-			uint16_t  	interval;
-			uint16_t  	window;
-			uint8_t    	localAddressType;
-			uint8_t    	filterDuplicates;
-		};
+        /**
+         * The structure for setting LE scan parameters over the HCI socket
+         */
+        struct __attribute__((packed)) LE_ScanParams {
+            uint8_t        type;
+            uint16_t       interval;
+            uint16_t       window;
+            uint8_t        localAddressType;
+            uint8_t        filterDuplicates;
+        };
 
-		/**
-		 * The structure for enabling LE scanning
-		 */
-		struct __attribute__((packed)) LE_ScanEnableParams
-		{
-			uint8_t enable;
-			uint8_t filterDuplicates;
-		};
+        /**
+         * The structure for enabling LE scanning
+         */
+        struct __attribute__((packed)) LE_ScanEnableParams {
+            uint8_t enable;
+            uint8_t filterDuplicates;
+        };
 
         #define OGF_OCF(x, y) ((x << 10) | y)
 
@@ -338,7 +329,7 @@ namespace afm
                  */
                 void SetPacketType(HCI_PacketType packetType)
                 {
-			        SetBit(packetType, &m_packetTypeMask);
+                    SetBit(packetType, &m_packetTypeMask);
                 }
 
                 /**
@@ -355,7 +346,6 @@ namespace afm
                  */
                 void EnableMask(HCI_EventType maskBit)
                 {
-                    //SetBit(maskBit & sm_maxEventBits, &m_eventMask);
                     setBit(maskBit & sm_maxEventBits, &m_eventMask2);
                 }
 
