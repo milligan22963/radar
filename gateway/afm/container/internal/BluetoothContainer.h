@@ -74,8 +74,8 @@ namespace afm
                 void StartScanning();
                 void StopScanning();
                 bool SendCommand(const common::HCI_Command &command);
-		        bool ReceiveResponse(common::HCI_Event &response);
-		        int ReceiveData(uint8_t *pBuffer, uint16_t maxLength, uint32_t timeOutMS, struct timespec &timeStamp);
+                bool ReceiveResponse(common::HCI_Event &response);
+                int ReceiveData(uint8_t *pBuffer, uint16_t maxLength, uint32_t timeOutMS, struct timespec &timeStamp);
 
                 void ReceiveBluetoothData();
 
