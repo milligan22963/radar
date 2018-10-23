@@ -33,29 +33,27 @@ namespace afm
 
         bool BluetoothHCIFilter::ApplyEventMask()
         {
-			bool success = false;
+            bool success = false;
 
-			if (getsockopt(m_socketInstance, SocketLevelHCI, HCI_SocketOption::HCI_Filter, m_filterData, &m_filterDataLength) == 0) {
+            if (getsockopt(m_socketInstance, SocketLevelHCI, HCI_SocketOption::HCI_Filter, m_filterData, &m_filterDataLength) == 0) {
                 HCI_FilterParams filter;
 
                 filter.packetTypeMask = m_packetTypeMask;
-  //              filter.eventMask[0] = (uint32_t)(m_eventMask >> 32);
-//                filter.eventMask[1] = (uint32_t)m_eventMask;
                 filter.eventMask[0] = m_eventMask2[0];
                 filter.eventMask[1] = m_eventMask2[1];
                 filter.controllerCommand = m_controllerCommand;
 
-				if (setsockopt(m_socketInstance, SocketLevelHCI, HCI_SocketOption::HCI_Filter, &filter, sizeof(filter)) == 0) {
+               if (setsockopt(m_socketInstance, SocketLevelHCI, HCI_SocketOption::HCI_Filter, &filter, sizeof(filter)) == 0) {
                     m_filterApplied = true;
-					success = true;
-				} else {
+                    success = true;
+                } else {
                     Poco::Logger::get("BTHCI").error("Unable to set socket options: event mask");
                 }
             } else {
                 Poco::Logger::get("BTHCI").error("Unable to get socket options: event mask");
             }
 
-			return success;
+            return success;
         }
 
         void BluetoothHCIFilter::Reset()
