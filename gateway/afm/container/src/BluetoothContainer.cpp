@@ -49,7 +49,6 @@ namespace afm
                     memset(&hciAddr, 0, sizeof(hciAddr));
                     hciAddr.hci_family = AF_BLUETOOTH;
                     hciAddr.hci_device = m_hciInstance;
-                //	hciAddr.hci_channel = 0x01; // user channel not available in linux 3.10
 
                     if (bind(m_hciDeviceSocket, (struct sockaddr *)&hciAddr, sizeof(hciAddr)) == 0) {
 
@@ -181,34 +180,35 @@ namespace afm
 
                 m_receiveThread.join();
 
-				m_eventFilter.SetPacketType(common::HCI_PacketType::HCI_EventPacket);
+                m_eventFilter.SetPacketType(common::HCI_PacketType::HCI_EventPacket);
                 m_eventFilter.EnableMask(common::HCI_EventType::HCI_CommandComplete);
                 m_eventFilter.EnableMask(common::HCI_EventType::HCI_CommandStatus);
                 m_eventFilter.SetControllerCommand(common::LE_ControllerCommand::LE_SetScanEnable);
-				if (m_eventFilter.ApplyEventMask() == false) {
-				}
+                if (m_eventFilter.ApplyEventMask() == false) {
+                    // note error
+                }
 
                 // disable scan
                 common::LE_ScanEnableParams scanEnable;
 
-				scanEnable.enable = 0; // disable it
-				scanEnable.filterDuplicates = 0;
+                scanEnable.enable = 0; // disable it
+                scanEnable.filterDuplicates = 0;
 
                 common::HCI_Command command;
 
-				command.commandCode = common::LE_ControllerCommand::LE_SetScanEnable;
+                command.commandCode = common::LE_ControllerCommand::LE_SetScanEnable;
 
-				command.parameterLength = sizeof(scanEnable);
-				command.pParameters = &scanEnable;
-				if (SendCommand(command) == true) {
+                command.parameterLength = sizeof(scanEnable);
+                command.pParameters = &scanEnable;
+                if (SendCommand(command) == true) {
                     m_eventFilter.Reset();
-				}
-			}
+                }
+            }
         }
 
-		bool BluetoothContainer::SendCommand(const common::HCI_Command &command)
-		{
-			bool success = false;
+        bool BluetoothContainer::SendCommand(const common::HCI_Command &command)
+        {
+            bool success = false;
 
             common::HCI_PacketType packetType = common::HCI_PacketType::HCI_CommandPacket;
 
@@ -249,12 +249,13 @@ namespace afm
                     delete [] (uint8_t *)(response.pParams);
                 }
             }
-			return success;
-		}
 
-		bool BluetoothContainer::ReceiveResponse(common::HCI_Event &response)
-		{
-			bool success = false;
+            return success;
+        }
+
+        bool BluetoothContainer::ReceiveResponse(common::HCI_Event &response)
+        {
+            bool success = false;
 
             response.pParams = nullptr;
             response.parameterLength = 0;
@@ -272,40 +273,42 @@ namespace afm
             } else {
                 GetLogger().error("Timed out waiting for data.");
             }
-			return success;
-		}
 
-		int BluetoothContainer::ReceiveData(uint8_t *pBuffer, uint16_t maxLength, uint32_t timeOutMS, struct timespec &timeStamp)
-		{
-			int bytesRead = 0;
+            return success;
+        }
 
-			fd_set readDescriptorSet;
-			struct timeval tv;
+        int BluetoothContainer::ReceiveData(uint8_t *pBuffer, uint16_t maxLength, uint32_t timeOutMS, struct timespec &timeStamp)
+        {
+            int bytesRead = 0;
 
-			memset(&timeStamp, 0, sizeof(timeStamp));
+            fd_set readDescriptorSet;
+            struct timeval tv;
 
-			FD_ZERO(&readDescriptorSet);
-			FD_SET(m_hciDeviceSocket, &readDescriptorSet);
+            memset(&timeStamp, 0, sizeof(timeStamp));
 
-			tv.tv_sec = timeOutMS / 1000;
-			tv.tv_usec = timeOutMS % 1000;
+            FD_ZERO(&readDescriptorSet);
+            FD_SET(m_hciDeviceSocket, &readDescriptorSet);
 
-			if (select(m_hciDeviceSocket + 1, &readDescriptorSet, NULL, NULL, &tv) != -1) {
-				if (FD_ISSET(m_hciDeviceSocket, &readDescriptorSet)) {
-					if (clock_gettime(CLOCK_REALTIME, &timeStamp) == -1) {
+            tv.tv_sec = timeOutMS / 1000;
+            tv.tv_usec = timeOutMS % 1000;
+
+            if (select(m_hciDeviceSocket + 1, &readDescriptorSet, NULL, NULL, &tv) != -1) {
+                if (FD_ISSET(m_hciDeviceSocket, &readDescriptorSet)) {
+                    if (clock_gettime(CLOCK_REALTIME, &timeStamp) == -1) {
                         GetLogger().error("Failed to get time stamp in received data");
-					}
-					bytesRead = read(m_hciDeviceSocket, pBuffer, maxLength);
-				}
-			}
-			return bytesRead;
-		}
+                    }
+                    bytesRead = read(m_hciDeviceSocket, pBuffer, maxLength);
+                }
+            }
+
+            return bytesRead;
+        }
 
         void BluetoothContainer::ReceiveBluetoothData()
         {
-			uint16_t scratchBufferLength = 1024;
-			uint8_t *pScratchBuffer = new uint8_t[scratchBufferLength];
-			struct timespec timeStamp;
+            uint16_t scratchBufferLength = 1024;
+            uint8_t *pScratchBuffer = new uint8_t[scratchBufferLength];
+            struct timespec timeStamp;
 
             GetLogger().information("Starting receive thread");
 
