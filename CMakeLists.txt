@@ -9,22 +9,17 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 # Architecture
 set (ARCH amd64)
 
-set (PAHO_MQTT_VERSION 1.2.1)
-set (JSON_VERSION 3.1.2)
-set (POCO_VERSION 1.9.0)
-
-set (COTS ${PROJECT_SOURCE_DIR}/cots)
 set (AFM ${PROJECT_SOURCE_DIR}/gateway/afm)
 
 # These were created from the source and placed in this specific location
-set (PAHO_MQTT_INCLUDE ${COTS}/paho/${PAHO_MQTT_VERSION}/include)
-set (PAHO_MQTT_LIB ${COTS}/paho/${PAHO_MQTT_VERSION}/lib/${ARCH})
+set (PAHO_MQTT_INCLUDE /usr/local/include)
+set (PAHO_MQTT_LIB /usr/local/lib)
 
-set (JSON_INCLUDE ${COTS}/json/${JSON_VERSION}/include)
+set (JSON_INCLUDE /usr/local/include/nlohmann)
 
 # For poco - include such as "Poco/Util/Application.h" so we know where it comes from
-set (POCO_INCLUDE ${COTS}/poco/poco-${POCO_VERSION}-all/afm-build/include)
-set (POCO_LIB ${COTS}/poco/poco-${POCO_VERSION}-all/afm-build/lib/${ARCH})
+set (POCO_INCLUDE /usr/local/include)
+set (POCO_LIB /usr/local/lib)
 
 set (SYSTEM ${PROJECT_SOURCE_DIR}/gateway/shared)
 set (SYSTEM_INCLUDE ${SYSTEM}/include)
