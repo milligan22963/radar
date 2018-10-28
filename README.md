@@ -20,7 +20,7 @@ or:
 ./build_release.sh
 
 
-Omce built run it as such:
+Once built run it as such:
 sudo ./debug/staging/bin/Radar -cfg gateway/apps/Radar/scripts/Radar.cfg
 
 You will want to modify the configuration file to point to your own mqtt broker if using an MQTT data source/sink.  The database portion is work in progress.  It is important to run as sudo in order to access the bluetooth hardware.  I haven't yet configured my account to run it directly without sudo.  The intent is that the application would be part of a service running on boot.
