@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <unistd.h>
+#include "SystemDefines.h"
 #include "Radar.h"
 #include "data/DataPacketFactory.h"
 
@@ -38,7 +39,7 @@ namespace afm
                     std::string address;
                     pPacket->GetValue("address", address);
 
-                    pPacket->SetValue("topic", "afm/sensor/" + address);
+                    pPacket->SetTag(sc_topic, "afm/sensor/" + address);
 
                     // We send directly to the offload interface as we
                     // can utilize its persistence

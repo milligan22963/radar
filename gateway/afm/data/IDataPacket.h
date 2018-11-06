@@ -121,6 +121,25 @@ namespace afm
                 virtual bool HasMultiplePackets() = 0;
 
                 /**
+                 * @brief returns a tag if there is one of the
+                 *      the given name.
+                 * 
+                 * @param[in] tagName - the name of the tag to retreive
+                 * @param[out] tagValue - the value of the tag if there
+                 * 
+                 * @return bool - true indicating success, false indicating tag doesn't exist
+                 */
+                virtual bool GetTag(const std::string &tagName, std::string &tagValue) = 0;
+
+                /**
+                 * @brief sets a tag of the given name and with the value
+                 * 
+                 * @param[in] tagName - the name of the tag to set
+                 * @param[in] tagValue - the value of the tag to set to
+                 */
+                virtual void SetTag(const std::string &tagName, const std::string &tagValue) = 0;
+
+                /**
                  * @brief some packets may consist of a collection
                  *          of packets so we allow for multiples.
                  *

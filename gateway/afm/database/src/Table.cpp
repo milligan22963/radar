@@ -5,6 +5,7 @@
   Copyright: 2018
   --------------------------------------*/
 
+#include "Column.h"
 #include "Table.h"
 
 namespace afm
@@ -19,7 +20,7 @@ namespace afm
 
         Table::~Table()
         {
-
+            m_columns.clear();
         }
 
         bool Table::Initialize(const std::string &tableName, const nlohmann::json &tableInformation)
@@ -34,6 +35,13 @@ namespace afm
                 m_logger.information("Column: %s", column.key());
                 if (column->is_string()) {
                     m_logger.information("string: %s", column->get<std::string>());
+                } else {
+                    IColumnSPtr pColumn = std::make_shared<Column>();
+
+                    if (pColumn->Initialize(column.key(), column.value()) == true) {
+                        m_logger.information(pColumn->ToString());
+                        m_columns.push_back(pColumn);
+                    }
                 }
             }
 

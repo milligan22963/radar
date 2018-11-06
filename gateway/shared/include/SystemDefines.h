@@ -18,5 +18,6 @@ namespace afm
     const std::string sc_true = "true";
     const std::string sc_false = "false";
     const std::string sc_timeStamp = "timeStamp";
+    const std::string sc_topic = "topic";
 }
 #endif

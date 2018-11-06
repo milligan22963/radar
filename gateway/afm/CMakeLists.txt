@@ -29,6 +29,7 @@ set(DATA_SRC_FILES
 )
 
 set(DATABASE_SRC_FILES
+    database/src/Column.cpp
     database/src/Table.cpp
     database/src/TableFactory.cpp
 )

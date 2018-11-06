@@ -269,32 +269,24 @@ namespace afm
             if (m_isConnected == true) {
                 std::string topic;
 
-                if (pPacket->GetValue(sc_topic, topic) == true) {
-                    data::IDataPacketSPtr pOutgoingPacket = data::DataPacketFactory::CreateDataPacket(data::DataPacketType::DATA);
-
-                    pOutgoingPacket->Clone(pPacket);
-
-                    pOutgoingPacket->RemoveValue(sc_topic);
-
+                if (pPacket->GetTag(sc_topic, topic) == true) {
                     int16_t qos = 0;
                     bool retained = false;
 
                     std::string value;
 
-                    if (pPacket->GetValue(sc_retain, value) == true) {
+                    if (pPacket->GetTag(sc_retain, value) == true) {
                         if (value == sc_true) {
                             retained = true;
                         }
-                        pOutgoingPacket->RemoveValue(sc_retain);
                     }
 
                     // packet specific qos?
-                    if (pPacket->GetValue(sc_qos, value) == true) {
+                    if (pPacket->GetTag(sc_qos, value) == true) {
                         qos = ::atoi(value.c_str());
-                        pOutgoingPacket->RemoveValue(sc_qos);
                     }
 
-                    std::string message = pOutgoingPacket->ToJSON();
+                    std::string message = pPacket->ToJSON();
 
                     MQTTAsync_responseOptions responseOptions = MQTTAsync_responseOptions_initializer;
                     MQTTAsync_message outgoingMessage = MQTTAsync_message_initializer;

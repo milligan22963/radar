@@ -7,6 +7,7 @@ include_directories(
     .
     internal
     ${AFM}
+    ${SYSTEM_INCLUDE}
     ${POCO_INCLUDE}
     ${JSON_INCLUDE}
 )

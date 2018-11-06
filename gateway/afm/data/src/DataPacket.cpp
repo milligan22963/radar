@@ -115,6 +115,23 @@ namespace afm
             return pNextPacket;
         }
 
+        bool DataPacket::GetTag(const std::string &tagName, std::string &tagValue)
+        {
+            bool success = false;
+
+            PacketTags::const_iterator iter = m_tags.find(tagName);
+            if (iter != m_tags.end()) {
+                tagValue = iter->second;
+                success = true;
+            }
+            return success;
+        }
+
+        void DataPacket::SetTag(const std::string &tagName, const std::string &tagValue)
+        {
+            m_tags[tagName] = tagValue;
+        }
+
         void DataPacket::Reset()
         {
             m_data.clear();

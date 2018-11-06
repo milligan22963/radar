@@ -8,8 +8,10 @@
 #ifndef _H_TABLE
 #define _H_TABLE
 
+#include <vector>
 #include <Poco/Logger.h>
 #include "ITable.h"
+#include "IColumn.h"
 
 /**
  * @brief top level namespace for afm library assets
@@ -35,6 +37,7 @@ namespace afm
                 virtual bool Initialize(const std::string &tableName, const nlohmann::json &tableInformation) override;
 
             private:
+                std::vector<IColumnSPtr> m_columns;
                 Poco::Logger &m_logger;
         };
     }

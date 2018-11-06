@@ -25,6 +25,8 @@ namespace afm
      */
     namespace data
     {
+        using PacketTags = std::map<std::string, std::string>;
+
         /**
          * @class DataPacket
          * 
@@ -94,6 +96,25 @@ namespace afm
                 virtual IDataPacketSPtr getNextPacket() override;
 
                 /**
+                 * @brief returns a tag if there is one of the
+                 *      the given name.
+                 * 
+                 * @param[in] tagName - the name of the tag to retreive
+                 * @param[out] tagValue - the value of the tag if there
+                 * 
+                 * @return bool - true indicating success, false indicating tag doesn't exist
+                 */
+                virtual bool GetTag(const std::string &tagName, std::string &tagValue) override;
+
+                /**
+                 * @brief sets a tag of the given name and with the value
+                 * 
+                 * @param[in] tagName - the name of the tag to set
+                 * @param[in] tagValue - the value of the tag to set to
+                 */
+                virtual void SetTag(const std::string &tagName, const std::string &tagValue) override;
+
+                /**
                  * @copydoc IDataPacket::Reset
                  */
                 virtual void Reset() override;
@@ -106,6 +127,8 @@ namespace afm
                 nlohmann::json m_data;
 
                 DataPacketDeque m_packetQueue;
+
+                PacketTags m_tags;
         };
     }
 }
