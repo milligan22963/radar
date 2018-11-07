@@ -155,6 +155,13 @@ namespace afm
                 virtual void ProcessOptions(const nlohmann::json &options);
 
                 /**
+                 * @brief connects to the mqtt broker
+                 * 
+                 * @return true on success, false on failure
+                 */
+                bool ConnectToBroker();
+
+                /**
                  * @brief resets to initial values
                  */
                 void Reset();

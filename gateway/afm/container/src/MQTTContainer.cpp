@@ -210,40 +210,7 @@ namespace afm
                     MQTTAsync_setCallbacks(m_client, this, ConnectionLost, MessageArrived, DeliveryComplete);
 	                MQTTAsync_setConnected(m_client, this, Connected);
 
-                    MQTTAsync_connectOptions connectionOptions = MQTTAsync_connectOptions_initializer;
-
-                    connectionOptions.keepAliveInterval = m_keepAliveInterval;
-                    connectionOptions.cleansession = m_cleanSession == true ? 1 : 0;
-                    //connectionOptions.onSuccess = Connected; handled by the setConnected call above
-                    connectionOptions.onFailure = ConnectFailure;
-                    connectionOptions.automaticReconnect = m_autoReconnect == true ? 1 : 0;
-                    connectionOptions.context = this;
-
-                    MQTTAsync_SSLOptions sslOptions = MQTTAsync_SSLOptions_initializer;
-
-                    if (m_sslEnabled == true) {
-                        sslOptions.sslVersion = MQTT_SSL_VERSION_TLS_1_2;
-                        sslOptions.verify = 1;
-                        sslOptions.CApath = nullptr; // need to check this
-                        if (m_sslTrustStore.empty() == false) {
-                            sslOptions.trustStore = m_sslTrustStore.c_str();
-                        }
-                        if (m_sslPrivateCertificate.empty() == false) {
-                            sslOptions.privateKey = m_sslPrivateCertificate.c_str();
-                        }
-                        if (m_sslPrivatePassphrase.empty() == false) {
-                            sslOptions.privateKeyPassword = m_sslPrivatePassphrase.c_str();
-                        }
-                        if (m_sslPublicCertificate.empty() == false) {
-                            sslOptions.keyStore = m_sslPublicCertificate.c_str();
-                        }
-                        connectionOptions.ssl = &sslOptions;
-                    }
-
-                    if (MQTTAsync_connect(m_client, &connectionOptions) != MQTTASYNC_SUCCESS) {
-                        // failed to call connect
-                        GetLogger().error("Unable to connect to: %s", GetTarget());
-                    } else {
+                    if (ConnectToBroker() == true) {
                         GetLogger().information("Initial connection made");
                     }
                 } else {
@@ -376,6 +343,9 @@ namespace afm
             SetIsReady(m_isConnected);
 
             GetLogger().error("Connection failure to MQTT");
+
+            // Failed to connect, try again
+            ConnectToBroker();
         }
 
         void MQTTContainer::OnDisconnected()
@@ -472,6 +442,48 @@ namespace afm
                 int32_t messageCount = options[sc_maxBufferedMessages].get<int32_t>();
                 m_maxBufferedMessages = messageCount > 0 ? messageCount : -1;
             }
+        }
+
+        bool MQTTContainer::ConnectToBroker()
+        {
+            bool success = true;
+
+            MQTTAsync_connectOptions connectionOptions = MQTTAsync_connectOptions_initializer;
+
+            connectionOptions.keepAliveInterval = m_keepAliveInterval;
+            connectionOptions.cleansession = m_cleanSession == true ? 1 : 0;
+            //connectionOptions.onSuccess = Connected; handled by the setConnected during initialize
+            connectionOptions.onFailure = ConnectFailure;
+            connectionOptions.automaticReconnect = m_autoReconnect == true ? 1 : 0;
+            connectionOptions.context = this;
+
+            MQTTAsync_SSLOptions sslOptions = MQTTAsync_SSLOptions_initializer;
+
+            if (m_sslEnabled == true) {
+                sslOptions.sslVersion = MQTT_SSL_VERSION_TLS_1_2;
+                sslOptions.verify = 1;
+                sslOptions.CApath = nullptr; // need to check this
+                if (m_sslTrustStore.empty() == false) {
+                    sslOptions.trustStore = m_sslTrustStore.c_str();
+                }
+                if (m_sslPrivateCertificate.empty() == false) {
+                    sslOptions.privateKey = m_sslPrivateCertificate.c_str();
+                }
+                if (m_sslPrivatePassphrase.empty() == false) {
+                    sslOptions.privateKeyPassword = m_sslPrivatePassphrase.c_str();
+                }
+                if (m_sslPublicCertificate.empty() == false) {
+                    sslOptions.keyStore = m_sslPublicCertificate.c_str();
+                }
+                connectionOptions.ssl = &sslOptions;
+            }
+
+            if (MQTTAsync_connect(m_client, &connectionOptions) != MQTTASYNC_SUCCESS) {
+                success = false;
+                GetLogger().error("Unable to async connect to MQTT");
+            }
+
+            return success;
         }
 
         void MQTTContainer::Reset()
