@@ -21,6 +21,14 @@ namespace afm
      */
     namespace database
     {
+        enum class TableType
+        {
+            SLQLITE,
+            MYSQL, // including maria
+            POSTGRES,
+            END_TABLE_TYPES
+        };
+
         /**
          * @class Table
          * 
@@ -29,7 +37,7 @@ namespace afm
         class TableFactory
         {
             public:
-                static ITableSPtr CreateTable(std::string type);
+                static ITableSPtr CreateTable(TableType type);
         };
     }
 }

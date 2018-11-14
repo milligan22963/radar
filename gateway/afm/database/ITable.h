@@ -42,9 +42,13 @@ namespace afm
                 virtual ~ITable() {}
 
                 virtual bool Initialize(const std::string &tableName, const nlohmann::json &tableInformation) = 0;
+                virtual bool DoesExist() const = 0;
+                virtual bool Create() const = 0;
+                virtual std::string Name() const = 0;
         };
 
         using ITableSPtr = std::shared_ptr<ITable>;
+        using Tables = std::map<std::string, ITableSPtr>;
     }
 }
 

@@ -12,6 +12,8 @@
 #include <string>
 
 #include <Poco/Data/Session.h>
+#include "database/ITable.h"
+#include "database/TableFactory.h"
 #include "Container.h"
 
 /**
@@ -24,9 +26,6 @@ namespace afm
      */
     namespace container
     {
-        using TableColumns = std::map<std::string, std::string>;
-        using Table = std::map<std::string, TableColumns>;
-
         /**
          * @class DatabaseContainer
          * 
@@ -73,9 +72,12 @@ namespace afm
                 std::string GetHostName() const { return m_hostName; }
                 uint32_t GetPort() const { return m_port; }
                 void ProcessTables(const nlohmann::json &optionSet);
-                const Table &GetTables() const { return m_tables; }
+                const database::Tables &GetTables() const { return m_tables; }
+                void SetTableType(database::TableType type) { m_tableType = type; }
+                database::TableType GetTableType() const { return m_tableType; }
 
             private:
+                database::TableType m_tableType = database::TableType::SLQLITE;
                 std::string m_databaseTypeName = "SQLite"; // default
                 std::string m_userName = "afm";
                 std::string m_password = "afm";
@@ -87,8 +89,7 @@ namespace afm
                 std::shared_ptr<Poco::Data::Session> m_pDBSession = nullptr;
 
                 std::string m_connectionString;
-
-                Table m_tables;
+                database::Tables m_tables;
         };
     }
 }

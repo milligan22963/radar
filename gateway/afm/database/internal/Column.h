@@ -42,7 +42,7 @@ namespace afm
             private:
                 std::string m_columnName;
                 std::string m_columnType;
-                int m_length = 0;
+                uint32_t m_length = 0;
                 std::vector<std::string> m_options;
                 Poco::Logger &m_logger;
         };

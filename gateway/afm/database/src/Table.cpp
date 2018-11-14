@@ -27,6 +27,7 @@ namespace afm
         {
             bool success = false;
 
+            m_name = tableName;
             m_logger.information("Parsing incoming json data");
 
             m_logger.information("Table: %s", tableName);
@@ -44,6 +45,20 @@ namespace afm
                     }
                 }
             }
+
+            return success;
+        }
+
+        bool Table::DoesExist() const
+        {
+            bool exists = false;
+
+            return exists;
+        }
+
+        bool Table::Create() const
+        {
+            bool success = false;
 
             return success;
         }

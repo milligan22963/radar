@@ -108,22 +108,11 @@ namespace afm
                 for (nlohmann::json::const_iterator iter = optionSet.begin(); iter != optionSet.end(); iter++) {
                     if (iter->is_object() == true) {
                         for (nlohmann::json::const_iterator table = iter->begin(); table != iter->end(); table++) {
-                            database::ITableSPtr pTable = database::TableFactory::CreateTable("table");
+                            database::ITableSPtr pTable = database::TableFactory::CreateTable(GetTableType());
 
                             pTable->Initialize(table.key(), *table);
-                            /*
-                           tableName = table.key();
-                            m_tables[tableName] = TableColumns();
-                            GetLogger().information("Table: %s", tableName);
 
-                            for (nlohmann::json::const_iterator column = (*table).begin(); column != (*table).end(); column++) {
-                                GetLogger().information("Column: %s", column.key());
-                                if (column->is_string()) {
-                                    m_tables[tableName].insert(std::make_pair(column.key(), column->get<std::string>()));
-                                    GetLogger().information("string: %s", column->get<std::string>());
-                                }
-                            }
-                         */   
+                            m_tables[table.key()] = pTable;
                         }
                     }
                 }

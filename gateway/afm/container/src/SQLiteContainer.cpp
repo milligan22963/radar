@@ -52,6 +52,7 @@ namespace afm
         {
             for (auto table : GetTables()) {
                 // Verify table exists, if not create it
+                GetLogger().information("Table: %s", table.second->Name());
             }
             return true;
         }
